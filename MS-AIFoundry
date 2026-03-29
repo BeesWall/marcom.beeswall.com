@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beeswall × Microsoft AI Foundry</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+/* ─── BRAND TOKENS ─────────────────────────────────────── */
+:root {
+--black: #08090d;
+--deep: #0d1117;
+--surface: #131920;
+--card: #1a2230;
+--border: rgba(213,163,56,0.18);
+--gold: #d5a338;
+--gold-lt: #f0c060;
+--gold-dk: #a07820;
+--white: #f4efe6;
+--muted: #8a96a8;
+--ms-blue: #0078d4;
+
+```
+--font-display: 'Syne', sans-serif;
+--font-body: 'DM Sans', sans-serif;
+
+--ease: cubic-bezier(.16,1,.3,1);
+```
+
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+background: var(–black);
+color: var(–white);
+font-family: var(–font-body);
+font-size: 16px;
+line-height: 1.7;
+overflow-x: hidden;
+}
+
+/* ─── HONEYCOMB BACKGROUND ─────────────────────────────── */
+body::before {
+content: ‘’;
+position: fixed;
+inset: 0;
+background-image:
+radial-gradient(ellipse 80% 60% at 15% 10%, rgba(213,163,56,.07) 0%, transparent 60%),
+radial-gradient(ellipse 60% 80% at 85% 90%, rgba(213,163,56,.05) 0%, transparent 60%),
+url(“data:image/svg+xml,%3Csvg xmlns=‘http://www.w3.org/2000/svg’ width=‘56’ height=‘64’%3E%3Cpath d=‘M28 2 L54 17 L54 47 L28 62 L2 47 L2 17 Z’ fill=‘none’ stroke=‘rgba(213,163,56,0.055)’ stroke-width=‘1’/%3E%3Cpath d=‘M28 2 L54 17 L54 47 L28 62 L2 47 L2 17 Z’ fill=‘none’ stroke=‘rgba(213,163,56,0.03)’ stroke-width=‘0.5’ transform=‘translate(28,32)’/%3E%3C/svg%3E”);
+background-size: auto, auto, 56px 64px;
+pointer-events: none;
+z-index: 0;
+}
+
+/* ─── NAV ──────────────────────────────────────────────── */
+nav {
+position: fixed;
+top: 0; left: 0; right: 0;
+z-index: 100;
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding: 1.1rem 3rem;
+background: rgba(8,9,13,.75);
+backdrop-filter: blur(18px);
+border-bottom: 1px solid var(–border);
+}
+
+.nav-logo {
+display: flex; align-items: center; gap: .6rem;
+font-family: var(–font-display);
+font-size: 1.25rem;
+font-weight: 800;
+letter-spacing: -.02em;
+color: var(–white);
+text-decoration: none;
+}
+
+.nav-logo .hex {
+width: 32px; height: 32px;
+background: var(–gold);
+clip-path: polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+display: flex; align-items: center; justify-content: center;
+font-size: .7rem; color: var(–black); font-weight: 800;
+}
+
+.nav-badge {
+display: flex; align-items: center; gap: .5rem;
+font-size: .78rem; color: var(–muted);
+border: 1px solid var(–border);
+padding: .35rem .8rem;
+border-radius: 99px;
+}
+
+.nav-badge .dot {
+width: 6px; height: 6px; border-radius: 50%;
+background: var(–ms-blue);
+box-shadow: 0 0 6px var(–ms-blue);
+animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+0%,100% { opacity:1; } 50% { opacity:.4; }
+}
+
+/* ─── HERO ─────────────────────────────────────────────── */
+.hero {
+position: relative;
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+text-align: center;
+padding: 8rem 2rem 6rem;
+z-index: 1;
+}
+
+.hero-eyebrow {
+display: inline-flex;
+align-items: center;
+gap: .5rem;
+font-size: .78rem;
+font-weight: 500;
+letter-spacing: .12em;
+text-transform: uppercase;
+color: var(–gold);
+border: 1px solid var(–border);
+padding: .4rem 1rem;
+border-radius: 99px;
+margin-bottom: 2rem;
+background: rgba(213,163,56,.06);
+animation: fadeUp .8s var(–ease) both;
+}
+
+.hero h1 {
+font-family: var(–font-display);
+font-size: clamp(2.6rem, 6vw, 5.2rem);
+font-weight: 800;
+line-height: 1.05;
+letter-spacing: -.03em;
+max-width: 900px;
+animation: fadeUp .9s var(–ease) .1s both;
+}
+
+.hero h1 .accent {
+color: var(–gold);
+position: relative;
+}
+
+.hero h1 .accent::after {
+content: ‘’;
+position: absolute;
+bottom: -.1em; left: 0; right: 0;
+height: 3px;
+background: linear-gradient(90deg, var(–gold), transparent);
+border-radius: 2px;
+}
+
+.hero-sub {
+margin-top: 1.8rem;
+font-size: 1.15rem;
+font-weight: 300;
+color: var(–muted);
+max-width: 620px;
+animation: fadeUp 1s var(–ease) .2s both;
+}
+
+.hero-cta {
+margin-top: 2.8rem;
+display: flex;
+gap: 1rem;
+flex-wrap: wrap;
+justify-content: center;
+animation: fadeUp 1s var(–ease) .3s both;
+}
+
+.btn-primary {
+background: var(–gold);
+color: var(–black);
+font-weight: 700;
+font-size: .9rem;
+padding: .85rem 2rem;
+border-radius: 8px;
+text-decoration: none;
+letter-spacing: .02em;
+transition: background .2s, transform .2s;
+display: inline-flex; align-items: center; gap: .5rem;
+}
+.btn-primary:hover { background: var(–gold-lt); transform: translateY(-2px); }
+
+.btn-ghost {
+background: transparent;
+color: var(–white);
+font-weight: 500;
+font-size: .9rem;
+padding: .85rem 2rem;
+border-radius: 8px;
+text-decoration: none;
+border: 1px solid var(–border);
+transition: border-color .2s, transform .2s;
+display: inline-flex; align-items: center; gap: .5rem;
+}
+.btn-ghost:hover { border-color: var(–gold); transform: translateY(-2px); }
+
+/* ─── LOGOS STRIP ──────────────────────────────────────── */
+.logos-strip {
+position: relative; z-index: 1;
+padding: 2.5rem 3rem;
+border-top: 1px solid var(–border);
+border-bottom: 1px solid var(–border);
+display: flex;
+align-items: center;
+justify-content: center;
+gap: .8rem;
+flex-wrap: wrap;
+background: rgba(13,17,23,.6);
+}
+
+.logos-strip .label {
+font-size: .72rem;
+text-transform: uppercase;
+letter-spacing: .1em;
+color: var(–muted);
+margin-right: .5rem;
+}
+
+.logo-pill {
+display: inline-flex; align-items: center; gap: .5rem;
+border: 1px solid var(–border);
+border-radius: 99px;
+padding: .4rem 1rem;
+font-size: .82rem;
+font-weight: 500;
+color: var(–muted);
+background: rgba(26,34,48,.6);
+transition: border-color .2s, color .2s;
+}
+.logo-pill:hover { border-color: var(–gold); color: var(–white); }
+
+.logo-pill .ico { font-size: 1rem; }
+
+/* ─── SECTION SHARED ───────────────────────────────────── */
+section { position: relative; z-index: 1; }
+
+.section-inner {
+max-width: 1160px;
+margin: 0 auto;
+padding: 6rem 2rem;
+}
+
+.section-label {
+font-size: .72rem;
+font-weight: 600;
+letter-spacing: .14em;
+text-transform: uppercase;
+color: var(–gold);
+margin-bottom: 1rem;
+display: flex; align-items: center; gap: .6rem;
+}
+
+.section-label::before {
+content: ‘’;
+display: block;
+width: 24px; height: 2px;
+background: var(–gold);
+border-radius: 2px;
+}
+
+h2 {
+font-family: var(–font-display);
+font-size: clamp(1.9rem, 3.5vw, 3rem);
+font-weight: 800;
+letter-spacing: -.03em;
+line-height: 1.1;
+max-width: 700px;
+}
+
+.section-desc {
+margin-top: 1rem;
+color: var(–muted);
+font-size: 1.05rem;
+max-width: 560px;
+font-weight: 300;
+}
+
+/* ─── PROBLEM STRIP ────────────────────────────────────── */
+.problem {
+background: linear-gradient(135deg, rgba(213,163,56,.06) 0%, transparent 60%);
+border-top: 1px solid var(–border);
+}
+
+.problem-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
+gap: 1.5rem;
+margin-top: 3.5rem;
+}
+
+.problem-card {
+background: var(–card);
+border: 1px solid var(–border);
+border-radius: 16px;
+padding: 2rem;
+transition: border-color .3s, transform .3s;
+position: relative;
+overflow: hidden;
+}
+
+.problem-card::before {
+content: ‘’;
+position: absolute;
+top: 0; left: 0; right: 0;
+height: 3px;
+background: linear-gradient(90deg, var(–gold), transparent);
+transform: scaleX(0);
+transform-origin: left;
+transition: transform .35s var(–ease);
+}
+
+.problem-card:hover { border-color: rgba(213,163,56,.45); transform: translateY(-4px); }
+.problem-card:hover::before { transform: scaleX(1); }
+
+.problem-icon {
+width: 44px; height: 44px;
+background: rgba(213,163,56,.1);
+border: 1px solid var(–border);
+border-radius: 10px;
+display: flex; align-items: center; justify-content: center;
+font-size: 1.3rem;
+margin-bottom: 1.2rem;
+}
+
+.problem-card h3 {
+font-family: var(–font-display);
+font-size: 1.05rem;
+font-weight: 700;
+margin-bottom: .5rem;
+}
+
+.problem-card p {
+font-size: .9rem;
+color: var(–muted);
+font-weight: 300;
+line-height: 1.6;
+}
+
+/* ─── HOW IT WORKS ─────────────────────────────────────── */
+.how {
+border-top: 1px solid var(–border);
+}
+
+.how-layout {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 5rem;
+align-items: center;
+margin-top: 4rem;
+}
+
+@media (max-width: 760px) { .how-layout { grid-template-columns: 1fr; gap: 3rem; } }
+
+.how-steps { display: flex; flex-direction: column; gap: 1.5rem; }
+
+.how-step {
+display: flex;
+gap: 1.2rem;
+align-items: flex-start;
+padding: 1.4rem;
+border-radius: 12px;
+border: 1px solid transparent;
+transition: border-color .3s, background .3s;
+cursor: default;
+}
+
+.how-step:hover {
+border-color: var(–border);
+background: rgba(26,34,48,.7);
+}
+
+.step-num {
+min-width: 36px; height: 36px;
+background: var(–gold);
+color: var(–black);
+border-radius: 50%;
+display: flex; align-items: center; justify-content: center;
+font-family: var(–font-display);
+font-weight: 800;
+font-size: .85rem;
+flex-shrink: 0;
+}
+
+.how-step h4 {
+font-family: var(–font-display);
+font-size: .98rem;
+font-weight: 700;
+margin-bottom: .3rem;
+}
+
+.how-step p { font-size: .88rem; color: var(–muted); font-weight: 300; }
+
+/* Architecture diagram */
+.arch-diagram {
+background: var(–card);
+border: 1px solid var(–border);
+border-radius: 20px;
+padding: 2rem;
+position: relative;
+overflow: hidden;
+}
+
+.arch-diagram::before {
+content: ‘’;
+position: absolute;
+top: -40%; right: -20%;
+width: 300px; height: 300px;
+border-radius: 50%;
+background: radial-gradient(circle, rgba(213,163,56,.12), transparent 70%);
+pointer-events: none;
+}
+
+.arch-title {
+font-size: .72rem;
+text-transform: uppercase;
+letter-spacing: .1em;
+color: var(–gold);
+margin-bottom: 1.5rem;
+font-weight: 600;
+}
+
+.arch-layer {
+border: 1px solid var(–border);
+border-radius: 10px;
+padding: 1rem 1.2rem;
+margin-bottom: .8rem;
+display: flex;
+align-items: center;
+gap: .9rem;
+transition: border-color .3s;
+}
+
+.arch-layer:hover { border-color: rgba(213,163,56,.4); }
+
+.arch-layer .layer-icon { font-size: 1.2rem; min-width: 28px; text-align: center; }
+
+.arch-layer .layer-label {
+font-size: .82rem;
+font-weight: 500;
+color: var(–white);
+}
+
+.arch-layer .layer-sub {
+font-size: .72rem;
+color: var(–muted);
+margin-top: .1rem;
+}
+
+.arch-layer.highlight {
+background: rgba(213,163,56,.08);
+border-color: rgba(213,163,56,.4);
+}
+
+.arch-arrow {
+text-align: center;
+color: var(–gold);
+font-size: 1.1rem;
+margin: .2rem 0;
+opacity: .7;
+}
+
+/* ─── AUDIENCE TABS ────────────────────────────────────── */
+.audience { border-top: 1px solid var(–border); }
+
+.tabs {
+display: flex;
+gap: .5rem;
+margin-top: 3rem;
+border-bottom: 1px solid var(–border);
+padding-bottom: 0;
+}
+
+.tab-btn {
+background: none;
+border: none;
+color: var(–muted);
+font-family: var(–font-body);
+font-size: .88rem;
+font-weight: 500;
+padding: .7rem 1.3rem;
+cursor: pointer;
+border-bottom: 2px solid transparent;
+margin-bottom: -1px;
+transition: color .2s, border-color .2s;
+white-space: nowrap;
+}
+
+.tab-btn.active { color: var(–gold); border-bottom-color: var(–gold); }
+.tab-btn:hover:not(.active) { color: var(–white); }
+
+.tab-panel { display: none; margin-top: 2.5rem; }
+.tab-panel.active { display: block; }
+
+.value-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+gap: 1.2rem;
+}
+
+.value-card {
+background: var(–card);
+border: 1px solid var(–border);
+border-radius: 14px;
+padding: 1.6rem;
+transition: border-color .3s, transform .25s;
+}
+
+.value-card:hover { border-color: rgba(213,163,56,.4); transform: translateY(-3px); }
+
+.value-card .tag {
+display: inline-block;
+background: rgba(213,163,56,.1);
+color: var(–gold);
+font-size: .68rem;
+font-weight: 600;
+letter-spacing: .08em;
+text-transform: uppercase;
+padding: .25rem .7rem;
+border-radius: 99px;
+margin-bottom: 1rem;
+border: 1px solid rgba(213,163,56,.25);
+}
+
+.value-card h4 {
+font-family: var(–font-display);
+font-size: .97rem;
+font-weight: 700;
+margin-bottom: .5rem;
+}
+
+.value-card p { font-size: .86rem; color: var(–muted); font-weight: 300; line-height: 1.6; }
+
+/* ─── USP SECTION ──────────────────────────────────────── */
+.usp { border-top: 1px solid var(–border); background: rgba(13,17,23,.5); }
+
+.usp-table {
+width: 100%;
+border-collapse: collapse;
+margin-top: 3rem;
+font-size: .88rem;
+}
+
+.usp-table th {
+text-align: left;
+font-family: var(–font-display);
+font-size: .78rem;
+letter-spacing: .06em;
+text-transform: uppercase;
+color: var(–muted);
+padding: .8rem 1.2rem;
+border-bottom: 1px solid var(–border);
+}
+
+.usp-table th:first-child { width: 32%; }
+
+.usp-table td {
+padding: 1.1rem 1.2rem;
+border-bottom: 1px solid rgba(213,163,56,.07);
+vertical-align: top;
+font-size: .88rem;
+color: var(–muted);
+}
+
+.usp-table td:first-child {
+font-family: var(–font-display);
+font-weight: 700;
+color: var(–white);
+font-size: .92rem;
+}
+
+.usp-table td .check { color: var(–gold); font-size: 1rem; margin-right: .3rem; }
+.usp-table td .cross { color: #e05555; font-size: 1rem; margin-right: .3rem; }
+
+.usp-table tr:last-child td { border-bottom: none; }
+
+@media (max-width: 640px) {
+.usp-table { display: block; overflow-x: auto; }
+}
+
+/* ─── QUOTE ────────────────────────────────────────────── */
+.quote-section {
+border-top: 1px solid var(–border);
+padding: 5rem 2rem;
+text-align: center;
+position: relative; z-index: 1;
+}
+
+.quote-box {
+max-width: 780px;
+margin: 0 auto;
+position: relative;
+}
+
+.quote-box::before {
+content: ‘”’;
+font-family: var(–font-display);
+font-size: 8rem;
+color: var(–gold);
+opacity: .12;
+position: absolute;
+top: -2rem; left: -1rem;
+line-height: 1;
+}
+
+.quote-text {
+font-family: var(–font-display);
+font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+font-weight: 600;
+letter-spacing: -.02em;
+line-height: 1.4;
+color: var(–white);
+}
+
+.quote-text .gold { color: var(–gold); }
+
+/* ─── CTA ──────────────────────────────────────────────── */
+.cta-section {
+border-top: 1px solid var(–border);
+background: linear-gradient(135deg, rgba(213,163,56,.07) 0%, transparent 70%);
+position: relative; z-index: 1;
+}
+
+.cta-inner {
+max-width: 1160px;
+margin: 0 auto;
+padding: 6rem 2rem;
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 2rem;
+flex-wrap: wrap;
+}
+
+.cta-inner h2 {
+font-family: var(–font-display);
+font-size: clamp(1.8rem, 3vw, 2.6rem);
+font-weight: 800;
+letter-spacing: -.03em;
+max-width: 500px;
+}
+
+.cta-inner h2 span { color: var(–gold); }
+
+.cta-actions { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; }
+
+/* ─── FOOTER ───────────────────────────────────────────── */
+footer {
+position: relative; z-index: 1;
+border-top: 1px solid var(–border);
+padding: 2rem 3rem;
+display: flex;
+align-items: center;
+justify-content: space-between;
+flex-wrap: wrap;
+gap: 1rem;
+font-size: .8rem;
+color: var(–muted);
+}
+
+.footer-links { display: flex; gap: 1.5rem; }
+.footer-links a { color: var(–muted); text-decoration: none; transition: color .2s; }
+.footer-links a:hover { color: var(–gold); }
+
+/* ─── ANIMATIONS ───────────────────────────────────────── */
+@keyframes fadeUp {
+from { opacity: 0; transform: translateY(20px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+opacity: 0;
+transform: translateY(24px);
+transition: opacity .7s var(–ease), transform .7s var(–ease);
+}
+
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ─── MOBILE ───────────────────────────────────────────── */
+@media (max-width: 640px) {
+nav { padding: 1rem 1.5rem; }
+.section-inner { padding: 4rem 1.5rem; }
+.cta-inner { flex-direction: column; align-items: flex-start; }
+footer { flex-direction: column; align-items: flex-start; }
+}
+</style>
+
+</head>
+<body>
+
+<!-- NAV -->
+
+<nav>
+<a href="#" class="nav-logo">
+<div class="hex">B</div>
+Beeswall
+</a>
+<div class="nav-badge">
+<span class="dot"></span>
+Azure Marketplace Partner
+</div>
+</nav>
+
+<!-- HERO -->
+
+<section class="hero">
+<div class="hero-eyebrow">🐝 Microsoft AI Foundry Enabler</div>
+<h1>
+Your Enterprise Data,<br>
+<span class="accent">Ready for AI Foundry</span><br>
+from Day One.
+</h1>
+<p class="hero-sub">
+Beeswall gives Microsoft sellers, architects, and enterprise customers a complete, hyperlink-structured view of their data estate — SAP, Salesforce, cloud and on-premise — so Foundry agents are grounded on data you actually trust.
+</p>
+<div class="hero-cta">
+<a href="https://azuremarketplace.microsoft.com" class="btn-primary">
+🛒 Get on Azure Marketplace
+</a>
+<a href="#audience" class="btn-ghost">
+See the value →
+</a>
+</div>
+</section>
+
+<!-- LOGOS STRIP -->
+
+<div class="logos-strip">
+<span class="label">Connects across</span>
+<div class="logo-pill"><span class="ico">🔷</span> Azure AI Foundry</div>
+<div class="logo-pill"><span class="ico">⚡</span> SAP S/4HANA</div>
+<div class="logo-pill"><span class="ico">☁️</span> Salesforce</div>
+<div class="logo-pill"><span class="ico">🗂️</span> OneLake</div>
+<div class="logo-pill"><span class="ico">🏢</span> On-Premise Storage</div>
+<div class="logo-pill"><span class="ico">🤖</span> Copilot Studio</div>
+</div>
+
+<!-- PROBLEM -->
+
+<section class="problem">
+<div class="section-inner">
+<div class="section-label">The Problem</div>
+<h2 class="reveal">Foundry Is Ready. Your Data Isn't.</h2>
+<p class="section-desc reveal">Microsoft AI Foundry promises enterprise-grade AI agents — but that promise collapses without a clear picture of where your data lives, who owns it, and whether it can be trusted as a grounding source.</p>
+
+```
+<div class="problem-grid">
+<div class="problem-card reveal">
+<div class="problem-icon">🔍</div>
+<h3>Invisible Data Estate</h3>
+<p>Enterprises running SAP, Salesforce, and legacy storage side-by-side have no single view of their data landscape — cloud or on-prem.</p>
+</div>
+<div class="problem-card reveal">
+<div class="problem-icon">⏳</div>
+<h3>Slow Pre-Sales Discovery</h3>
+<p>IT data readiness assessments take 3–9 months, killing sales momentum and delaying Foundry project approvals.</p>
+</div>
+<div class="problem-card reveal">
+<div class="problem-icon">🔗</div>
+<h3>Broken Citation Chains</h3>
+<p>Foundry agents surface source attributions — but raw file paths and SAP transaction codes are meaningless to business users without a navigable hyperlink layer.</p>
+</div>
+<div class="problem-card reveal">
+<div class="problem-icon">🧱</div>
+<h3>The On-Prem Wall</h3>
+<p>Microsoft Purview and Foundry IQ are Azure-native. On-premise SAP and legacy systems remain invisible to agent grounding pipelines.</p>
+</div>
+</div>
+```
+
+</div>
+</section>
+
+<!-- HOW IT WORKS -->
+
+<section class="how">
+<div class="section-inner">
+<div class="section-label">How Beeswall Works</div>
+<h2 class="reveal">From Data Chaos to<br>Agent-Ready in Weeks</h2>
+
+```
+<div class="how-layout">
+<div class="how-steps">
+<div class="how-step reveal">
+<div class="step-num">1</div>
+<div>
+<h4>Scan & Catalogue the Full Estate</h4>
+<p>Beeswall scans cloud and on-premise sources — SAP, Salesforce, blob storage, OneLake — generating a structured, hyperlink-navigable metadata map in days.</p>
+</div>
+</div>
+<div class="how-step reveal">
+<div class="step-num">2</div>
+<div>
+<h4>Bridge Non-Azure Sources via MCP</h4>
+<p>On-prem and non-Microsoft data sources are exposed as MCP-native knowledge endpoints, making them queryable through the same Foundry IQ pipeline as Azure-native data.</p>
+</div>
+</div>
+<div class="how-step reveal">
+<div class="step-num">3</div>
+<div>
+<h4>Feed Foundry IQ with Trusted Metadata</h4>
+<p>Structured source descriptions and quality metadata power Foundry IQ's automated query planner — making retrieval smarter without months of manual tuning.</p>
+</div>
+</div>
+<div class="how-step reveal">
+<div class="step-num">4</div>
+<div>
+<h4>Hyperlink-Structured Search Results</h4>
+<p>Agent citations become one-click navigable links back to the source system — SAP transaction, Salesforce record, or document — building instant user trust.</p>
+</div>
+</div>
+</div>
+
+<div class="arch-diagram reveal">
+<div class="arch-title">Architecture Overview</div>
+
+<div class="arch-layer">
+<div class="layer-icon">🤖</div>
+<div>
+<div class="layer-label">Copilot / MS 365 Agents</div>
+<div class="layer-sub">Business user interface</div>
+</div>
+</div>
+<div class="arch-arrow">↕</div>
+<div class="arch-layer">
+<div class="layer-icon">🔷</div>
+<div>
+<div class="layer-label">Azure AI Foundry IQ</div>
+<div class="layer-sub">Reasoning & retrieval engine</div>
+</div>
+</div>
+<div class="arch-arrow">↕</div>
+<div class="arch-layer highlight">
+<div class="layer-icon">🐝</div>
+<div>
+<div class="layer-label">Beeswall — Data Clarity Layer</div>
+<div class="layer-sub">Metadata · Hyperlinks · MCP bridge · Quality scoring</div>
+</div>
+</div>
+<div class="arch-arrow">↕</div>
+<div class="arch-layer">
+<div class="layer-icon">⚡</div>
+<div>
+<div class="layer-label">Enterprise Data Estate</div>
+<div class="layer-sub">SAP · Salesforce · OneLake · On-premise storage · Blob</div>
+</div>
+</div>
+</div>
+</div>
+```
+
+</div>
+</section>
+
+<!-- AUDIENCE TABS -->
+
+<section class="audience" id="audience">
+<div class="section-inner">
+<div class="section-label">Value by Audience</div>
+<h2 class="reveal">Built for Everyone in the Deal</h2>
+<p class="section-desc reveal">Different stakeholders. Different conversations. One platform.</p>
+
+```
+<div class="tabs">
+<button class="tab-btn active" onclick="showTab('sellers')">🟦 Microsoft Sellers</button>
+<button class="tab-btn" onclick="showTab('architects')">⚙️ Microsoft Architects</button>
+<button class="tab-btn" onclick="showTab('customers')">🏢 Enterprise Customers</button>
+</div>
+
+<div class="tab-panel active" id="tab-sellers">
+<div class="value-grid">
+<div class="value-card">
+<div class="tag">Sales Cycle</div>
+<h4>Close Faster with a Data Readiness Story</h4>
+<p>Replace a 6-month IT discovery process with a Beeswall scan. Walk into every Foundry conversation with a pre-built data estate map that validates the business case before procurement starts.</p>
+</div>
+<div class="value-card">
+<div class="tag">MACC Spend</div>
+<h4>Burn Committed Azure Spend</h4>
+<p>Beeswall is transactable on Azure Marketplace — customers can procure it via their MACC committed spend, making it a zero-friction add-on to any Foundry or Copilot deal.</p>
+</div>
+<div class="value-card">
+<div class="tag">Objection Handling</div>
+<h4>Answer "Is Our Data Ready?" on Day One</h4>
+<p>The most common Foundry objection is data unreadiness. Beeswall eliminates it by producing a structured, verifiable answer in weeks — turning a blocker into a proof point.</p>
+</div>
+<div class="value-card">
+<div class="tag">Co-Sell</div>
+<h4>A Native Microsoft GTM Play</h4>
+<p>Beeswall is designed for the Microsoft co-sell motion — ISV-listed, Foundry-aligned, and complementary to E7 upsell conversations around Copilot and Agents.</p>
+</div>
+</div>
+</div>
+
+<div class="tab-panel" id="tab-architects">
+<div class="value-grid">
+<div class="value-card">
+<div class="tag">Architecture</div>
+<h4>MCP Bridge for Non-Azure Sources</h4>
+<p>Beeswall exposes on-prem SAP, Salesforce, and legacy storage as MCP-native knowledge endpoints — extending Foundry IQ's retrieval reach without custom connector development.</p>
+</div>
+<div class="value-card">
+<div class="tag">Retrieval Quality</div>
+<h4>Pre-Populate Foundry IQ Source Descriptions</h4>
+<p>Foundry IQ query planning depends on structured source metadata. Beeswall generates this automatically across the full estate — making agent retrieval smarter from day one.</p>
+</div>
+<div class="value-card">
+<div class="tag">Observability</div>
+<h4>Know What Data You're Grounding On</h4>
+<p>Architects get a live inventory of every data source feeding Foundry agents — with quality scores, staleness indicators, and access permission maps — before the agent goes live.</p>
+</div>
+<div class="value-card">
+<div class="tag">Hyperlink Layer</div>
+<h4>Make Agent Citations Navigable</h4>
+<p>Transform raw Foundry IQ citations (blob paths, SAP codes, Salesforce IDs) into human-readable, one-click hyperlinks that business users can verify without developer involvement.</p>
+</div>
+</div>
+</div>
+
+<div class="tab-panel" id="tab-customers">
+<div class="value-grid">
+<div class="value-card">
+<div class="tag">Trust & Transparency</div>
+<h4>Verifiable AI Answers</h4>
+<p>Every Copilot or Foundry agent response comes with clickable source links — back to the SAP record, Salesforce account, or document — so business users can verify before they act.</p>
+</div>
+<div class="value-card">
+<div class="tag">Compliance</div>
+<h4>Know What Data Feeds Your Agents</h4>
+<p>Understand exactly which data sources are grounding your AI — including sensitive records, regulated data, and PII — before agents go into production. Reduce legal and compliance risk.</p>
+</div>
+<div class="value-card">
+<div class="tag">Hybrid Estates</div>
+<h4>Cloud and On-Prem, Together</h4>
+<p>If you run SAP on-premise alongside Azure services, Beeswall gives you a unified data estate view — no tool currently does this for the Foundry ecosystem.</p>
+</div>
+<div class="value-card">
+<div class="tag">ROI</div>
+<h4>Accelerate Time-to-Value for AI Projects</h4>
+<p>Skip the 6-month data readiness phase. Beeswall compresses discovery into weeks, so your Foundry agents are delivering business value in the same quarter you decide to invest.</p>
+</div>
+</div>
+</div>
+```
+
+</div>
+</section>
+
+<!-- USP COMPARISON -->
+
+<section class="usp">
+<div class="section-inner">
+<div class="section-label">Competitive Position</div>
+<h2 class="reveal">Why Beeswall Wins the<br>Foundry Enablement Category</h2>
+
+```
+<table class="usp-table reveal">
+<thead>
+<tr>
+<th>Capability</th>
+<th>Beeswall</th>
+<th>Microsoft Purview</th>
+<th>Collibra / Informatica</th>
+<th>Atlan / Monte Carlo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hybrid (on-prem + cloud) coverage</td>
+<td><span class="check">✓</span> SAP, Salesforce, blob, on-prem</td>
+<td><span class="cross">✗</span> Azure-native only</td>
+<td><span class="check">~</span> Partial, complex setup</td>
+<td><span class="cross">✗</span> Cloud-native only</td>
+</tr>
+<tr>
+<td>Time to data clarity</td>
+<td><span class="check">✓</span> Weeks</td>
+<td><span class="check">~</span> Weeks (Azure only)</td>
+<td><span class="cross">✗</span> 3–12 months</td>
+<td><span class="check">~</span> 4–6 weeks (cloud only)</td>
+</tr>
+<tr>
+<td>Azure Marketplace / MACC eligible</td>
+<td><span class="check">✓</span> Native</td>
+<td><span class="check">✓</span> Native</td>
+<td><span class="cross">✗</span> Not optimized</td>
+<td><span class="cross">✗</span> Limited</td>
+</tr>
+<tr>
+<td>Foundry IQ MCP bridge for non-Azure</td>
+<td><span class="check">✓</span> Core capability</td>
+<td><span class="cross">✗</span> Not available</td>
+<td><span class="cross">✗</span> Not available</td>
+<td><span class="cross">✗</span> Not available</td>
+</tr>
+<tr>
+<td>Hyperlink-structured search results</td>
+<td><span class="check">✓</span> Cross-system citation links</td>
+<td><span class="cross">✗</span> No</td>
+<td><span class="cross">✗</span> No</td>
+<td><span class="cross">✗</span> No</td>
+</tr>
+<tr>
+<td>Explicitly positioned as AI Foundry enabler</td>
+<td><span class="check">✓</span> Core GTM positioning</td>
+<td><span class="cross">✗</span> Governance focus</td>
+<td><span class="cross">✗</span> Enterprise governance</td>
+<td><span class="cross">✗</span> Data observability</td>
+</tr>
+</tbody>
+</table>
+```
+
+</div>
+</section>
+
+<!-- QUOTE -->
+
+<div class="quote-section">
+<div class="quote-box">
+<p class="quote-text">
+"Beeswall gives Foundry IQ what it can't build itself —
+a <span class="gold">structured, hyperlink-navigable metadata layer</span>
+across your entire hybrid estate, so AI agents are grounded on data you actually trust."
+</p>
+</div>
+</div>
+
+<!-- CTA -->
+
+<section class="cta-section">
+<div class="cta-inner">
+<h2>Ready to make your data estate <span>AI-ready</span>?</h2>
+<div class="cta-actions">
+<a href="https://azuremarketplace.microsoft.com" class="btn-primary">
+🛒 Find us on Azure Marketplace
+</a>
+<a href="https://www.beeswall.com" class="btn-ghost">
+Learn more at beeswall.com →
+</a>
+</div>
+</div>
+</section>
+
+<!-- FOOTER -->
+
+<footer>
+<div class="nav-logo">
+<div class="hex">B</div>
+Beeswall
+</div>
+<div>Microsoft ISV Partner · Azure Marketplace · AI Foundry Enablement</div>
+<div class="footer-links">
+<a href="https://www.beeswall.com">Website</a>
+<a href="https://azuremarketplace.microsoft.com">Azure Marketplace</a>
+</div>
+</footer>
+
+<script>
+// Tab switching
+function showTab(id) {
+document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+document.getElementById('tab-' + id).classList.add('active');
+event.target.classList.add('active');
+}
+
+// Scroll reveal
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+entries.forEach((entry, i) => {
+if (entry.isIntersecting) {
+setTimeout(() => entry.target.classList.add('visible'), i * 80);
+observer.unobserve(entry.target);
+}
+});
+}, { threshold: 0.12 });
+reveals.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
