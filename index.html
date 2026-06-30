@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BeesWall — Your AI can't find what your systems hide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bw-black: #0a0a0a;
+  --bw-white: #f5f3ee;
+  --bw-amber: #e8a020;
+  --bw-gray: #3a3835;
+  --bw-gray-light: #7a776f;
+  --bw-surface: #141312;
+  --bw-border: rgba(245,243,238,0.1);
+}
+html { scroll-behavior: smooth; }
+body { background: var(--bw-black); color: var(--bw-white); font-family: 'DM Sans', sans-serif; line-height: 1.5; overflow-x: hidden; }
+
+/* NAV */
+nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.1rem 4rem;
+  border-bottom: 0.5px solid var(--bw-border);
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(10,10,10,0.95); backdrop-filter: blur(16px);
+}
+.nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 19px; letter-spacing: -0.5px; color: var(--bw-white); text-decoration: none; }
+.nav-logo span { color: var(--bw-amber); }
+.nav-links { display: flex; gap: 2.2rem; align-items: center; }
+.nav-links a { font-size: 13px; color: var(--bw-gray-light); text-decoration: none; transition: color 0.2s; }
+.nav-links a:hover { color: var(--bw-white); }
+.btn-nav { background: var(--bw-amber); color: var(--bw-black) !important; padding: 9px 20px; border-radius: 4px; font-weight: 500 !important; font-size: 13px !important; transition: opacity 0.2s; }
+.btn-nav:hover { opacity: 0.85; }
+
+/* PAGE WRAPPER */
+.page { max-width: 1120px; margin: 0 auto; padding: 0 4rem; }
+
+/* HERO */
+.hero { padding: 7rem 0 5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 4.5rem; align-items: center; }
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--bw-amber); margin-bottom: 1.6rem;
+}
+.eyebrow::before { content: ''; width: 28px; height: 1px; background: var(--bw-amber); }
+h1 {
+  font-family: 'Syne', sans-serif; font-size: 54px; font-weight: 800;
+  line-height: 1.03; letter-spacing: -2.5px; margin-bottom: 1.5rem; color: var(--bw-white);
+}
+h1 em { color: var(--bw-amber); font-style: normal; }
+.hero-sub { font-size: 17px; line-height: 1.7; color: var(--bw-gray-light); font-weight: 300; max-width: 460px; margin-bottom: 2.5rem; }
+.hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+.btn-primary { background: var(--bw-amber); color: var(--bw-black); padding: 14px 28px; border: none; border-radius: 4px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: opacity 0.2s; text-decoration: none; display: inline-block; }
+.btn-primary:hover { opacity: 0.85; }
+.btn-ghost { background: transparent; color: var(--bw-white); padding: 14px 28px; border: 0.5px solid var(--bw-border); border-radius: 4px; font-family: 'DM Sans', sans-serif; font-size: 14px; cursor: pointer; transition: border-color 0.2s; text-decoration: none; display: inline-block; }
+.btn-ghost:hover { border-color: rgba(245,243,238,0.35); }
+
+/* HERO VISUAL */
+.hero-card { background: var(--bw-surface); border: 0.5px solid var(--bw-border); border-radius: 10px; padding: 1.5rem; }
+.hc-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--bw-gray-light); margin-bottom: 1rem; }
+.hc-query { background: rgba(232,160,32,0.08); border: 0.5px solid rgba(232,160,32,0.28); border-radius: 5px; padding: 11px 14px; margin-bottom: 1rem; font-size: 13px; color: var(--bw-amber); font-style: italic; line-height: 1.55; }
+.hc-result { border-left: 2px solid var(--bw-amber); padding-left: 12px; margin-bottom: 11px; }
+.hc-result-name { font-size: 13px; font-weight: 500; color: var(--bw-white); }
+.hc-result-meta { font-size: 11px; color: var(--bw-gray-light); margin-top: 2px; }
+.hc-badge { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 3px; font-weight: 500; margin-top: 5px; }
+.b-green { background: rgba(16,185,129,0.13); color: #6ee7b7; }
+.b-amber { background: rgba(232,160,32,0.13); color: #f0b84a; }
+.b-blue { background: rgba(99,102,241,0.13); color: #a5b4fc; }
+.hc-footer { border-top: 0.5px solid var(--bw-border); margin-top: 1rem; padding-top: 10px; display: flex; gap: 6px; flex-wrap: wrap; }
+.hc-pill { font-size: 10px; padding: 3px 9px; border-radius: 3px; background: rgba(255,255,255,0.05); color: var(--bw-gray-light); border: 0.5px solid var(--bw-border); }
+
+/* PROOF STRIP */
+.proof { border-top: 0.5px solid var(--bw-border); border-bottom: 0.5px solid var(--bw-border); padding: 1.6rem 0; display: flex; gap: 3rem; align-items: center; }
+.ps-stat .n { font-family: 'Syne', sans-serif; font-size: 30px; font-weight: 700; color: var(--bw-amber); line-height: 1; }
+.ps-stat .l { font-size: 12px; color: var(--bw-gray-light); margin-top: 3px; }
+.ps-div { width: 0.5px; height: 36px; background: var(--bw-border); flex-shrink: 0; }
+.ps-quote { flex: 1; font-size: 13px; font-style: italic; color: var(--bw-gray-light); line-height: 1.55; }
+.ps-quote cite { display: block; font-style: normal; font-size: 11px; margin-top: 5px; color: var(--bw-amber); }
+
+/* SECTIONS */
+section { padding: 5.5rem 0; }
+.sec-label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--bw-amber); margin-bottom: 0.9rem; }
+h2 { font-family: 'Syne', sans-serif; font-size: 40px; font-weight: 700; letter-spacing: -1.5px; line-height: 1.08; margin-bottom: 1.1rem; }
+.sec-sub { font-size: 16px; color: var(--bw-gray-light); max-width: 560px; line-height: 1.7; margin-bottom: 3rem; }
+
+/* PROBLEM */
+.prob-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(245,243,238,0.06); border: 0.5px solid var(--bw-border); border-radius: 10px; overflow: hidden; }
+.prob-card { background: var(--bw-surface); padding: 2rem 1.6rem; }
+.pc-icon { font-size: 22px; margin-bottom: 1.1rem; }
+.pc-title { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 600; margin-bottom: 0.6rem; }
+.pc-body { font-size: 13px; line-height: 1.7; color: var(--bw-gray-light); }
+
+/* USE CASE */
+.uc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4.5rem; align-items: start; }
+.uc-scenario { background: var(--bw-surface); border: 0.5px solid var(--bw-border); border-radius: 10px; padding: 2rem; }
+.uc-hdr { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--bw-gray-light); margin-bottom: 1.2rem; }
+.uc-event { background: rgba(232,160,32,0.07); border: 0.5px solid rgba(232,160,32,0.22); border-radius: 5px; padding: 12px 14px; margin-bottom: 1.2rem; font-size: 13px; line-height: 1.55; }
+.uc-event strong { color: var(--bw-amber); display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 5px; }
+.steps { list-style: none; }
+.steps li { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 0.5px solid var(--bw-border); font-size: 13px; line-height: 1.55; }
+.steps li:last-child { border-bottom: none; }
+.sn { font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; color: var(--bw-amber); min-width: 22px; padding-top: 1px; }
+.st { color: var(--bw-gray-light); }
+.st em { color: var(--bw-white); font-style: normal; }
+.uc-value h3 { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 700; letter-spacing: -0.8px; margin-bottom: 1.3rem; line-height: 1.2; }
+.vi-list { display: flex; flex-direction: column; gap: 1.1rem; }
+.vi { display: flex; gap: 13px; align-items: flex-start; }
+.vi-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--bw-amber); margin-top: 7px; flex-shrink: 0; }
+.vi-text { font-size: 14px; line-height: 1.65; color: var(--bw-gray-light); }
+.vi-text strong { color: var(--bw-white); font-weight: 500; }
+
+/* HOW IT WORKS */
+.hiw-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(245,243,238,0.06); border: 0.5px solid var(--bw-border); border-radius: 10px; overflow: hidden; }
+.hiw-step { background: var(--bw-surface); padding: 1.6rem 1.3rem; }
+.hiw-n { font-family: 'Syne', sans-serif; font-size: 38px; font-weight: 800; color: rgba(232,160,32,0.18); line-height: 1; margin-bottom: 0.9rem; }
+.hiw-title { font-size: 14px; font-weight: 500; margin-bottom: 0.5rem; }
+.hiw-body { font-size: 12px; line-height: 1.7; color: var(--bw-gray-light); }
+
+/* INTEGRATIONS */
+.int-grid { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 1.8rem; }
+.int-pill { background: var(--bw-surface); border: 0.5px solid var(--bw-border); border-radius: 4px; padding: 8px 15px; font-size: 13px; color: var(--bw-gray-light); display: flex; align-items: center; gap: 8px; transition: border-color 0.2s; }
+.int-pill:hover { border-color: rgba(232,160,32,0.4); color: var(--bw-white); }
+.int-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--bw-amber); flex-shrink: 0; }
+
+/* PERSONAS */
+.per-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.per-card { background: var(--bw-surface); border: 0.5px solid rgba(232,160,32,0.3); border-radius: 10px; padding: 2rem; }
+.per-role { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--bw-amber); margin-bottom: 0.4rem; }
+.per-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 600; margin-bottom: 0.9rem; line-height: 1.2; }
+.per-pain { font-size: 13px; line-height: 1.7; color: var(--bw-gray-light); margin-bottom: 1.1rem; }
+.per-value { font-size: 13px; line-height: 1.65; color: var(--bw-white); border-left: 2px solid var(--bw-amber); padding-left: 13px; }
+
+/* TESTIMONIALS */
+.t-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+.t-card { background: var(--bw-surface); border: 0.5px solid var(--bw-border); border-radius: 10px; padding: 1.6rem; }
+.t-quote { font-size: 14px; line-height: 1.75; font-style: italic; font-weight: 300; margin-bottom: 1.1rem; }
+.t-author { font-size: 10px; color: var(--bw-amber); text-transform: uppercase; letter-spacing: 0.07em; }
+
+/* CTA BAND */
+.cta-band { background: var(--bw-surface); border-top: 0.5px solid var(--bw-border); border-bottom: 0.5px solid var(--bw-border); padding: 6rem 4rem; text-align: center; }
+.cta-band .sec-label { justify-content: center; }
+.cta-band h2 { max-width: 580px; margin: 0 auto 1rem; }
+.cta-band p { font-size: 16px; color: var(--bw-gray-light); max-width: 460px; margin: 0 auto 2.8rem; line-height: 1.7; }
+.cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+/* FOOTER */
+footer { max-width: 1120px; margin: 0 auto; padding: 2rem 4rem; display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--bw-gray-light); }
+.f-logo { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; color: var(--bw-white); }
+.f-logo span { color: var(--bw-amber); }
+.f-links { display: flex; gap: 2rem; }
+.f-links a { color: var(--bw-gray-light); text-decoration: none; transition: color 0.2s; }
+.f-links a:hover { color: var(--bw-white); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Bees<span>Wall</span></a>
+  <div class="nav-links">
+    <a href="#">Solutions</a>
+    <a href="#">How it works</a>
+    <a href="#">Integrations</a>
+    <a href="#">Pricing</a>
+    <a href="#" class="btn-nav">Request demo</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div>
+      <div class="eyebrow">For Pharma &amp; MedTech enterprise</div>
+      <h1>Your AI can't find what your systems <em>hide.</em></h1>
+      <p class="hero-sub">BeesWall is the navigation layer that connects Veeva, SharePoint, SAP, and on-prem drives — so your people and your AI models find the right file, the right version, every time.</p>
+      <div class="hero-btns">
+        <a href="#" class="btn-primary">Request a demo</a>
+        <a href="#" class="btn-ghost">See it in 90 seconds ↗</a>
+      </div>
+    </div>
+    <div class="hero-card">
+      <div class="hc-label">BeesWall — live query</div>
+      <div class="hc-query">"Show me the submitted protocol for Study 204, the change control that approved the deviation, and the governing SOP."</div>
+      <div class="hc-result">
+        <div class="hc-result-name">Study 204 — Protocol v3.1</div>
+        <div class="hc-result-meta">Veeva Vault · Submitted to FDA Nov 2023</div>
+        <span class="hc-badge b-green">Submitted version</span>
+      </div>
+      <div class="hc-result">
+        <div class="hc-result-name">CCR-2023-0441 · Protocol deviation</div>
+        <div class="hc-result-meta">SharePoint · Approved by QA Dec 2023</div>
+        <span class="hc-badge b-amber">Change control</span>
+      </div>
+      <div class="hc-result">
+        <div class="hc-result-name">SOP-CL-017 · Clinical data management</div>
+        <div class="hc-result-meta">Network drive · Rev 4 · Current</div>
+        <span class="hc-badge b-blue">Governing SOP</span>
+      </div>
+      <div class="hc-footer">
+        <span class="hc-pill">Veeva Vault</span>
+        <span class="hc-pill">SharePoint</span>
+        <span class="hc-pill">On-prem drive</span>
+        <span class="hc-pill">2.4 sec</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROOF STRIP -->
+  <div class="proof">
+    <div class="ps-stat"><div class="n">90%</div><div class="l">Search time reduction</div></div>
+    <div class="ps-div"></div>
+    <div class="ps-stat"><div class="n">140h</div><div class="l">Recovered per user / year</div></div>
+    <div class="ps-div"></div>
+    <div class="ps-stat"><div class="n">2%</div><div class="l">Of typical ECM cost</div></div>
+    <div class="ps-div"></div>
+    <div class="ps-quote">"I can finally find my files in seconds without opening endless folders."<cite>Paula B. · Medical Affairs, Top 100 Best Place to Work</cite></div>
+  </div>
+
+  <!-- PROBLEM -->
+  <section>
+    <div class="sec-label">The problem</div>
+    <h2>Your systems manage what they own. Nothing connects the rest.</h2>
+    <p class="sec-sub">Veeva, SharePoint, SAP, and on-prem drives each do their job. But when a regulatory query arrives, the answer lives across all of them — and no one system sees the full picture.</p>
+    <div class="prob-grid">
+      <div class="prob-card">
+        <div class="pc-icon">⚡</div>
+        <div class="pc-title">48-hour FDA clock</div>
+        <div class="pc-body">An agency query arrives. The exact submitted version, its change control record, and the governing SOP live in three different systems. Manual coordination takes days you don't have.</div>
+      </div>
+      <div class="prob-card">
+        <div class="pc-icon">⚙</div>
+        <div class="pc-title">AI can't navigate silos</div>
+        <div class="pc-body">Microsoft Copilot and your Azure AI investments see SharePoint. They don't see Veeva, SAP, or the on-prem drives where half your critical data still lives. Your AI layer is only as good as the estate it can reach.</div>
+      </div>
+      <div class="prob-card">
+        <div class="pc-icon">◻</div>
+        <div class="pc-title">Invisible information loss</div>
+        <div class="pc-body">People don't find files, recreate them, or make decisions without them — never knowing the answer was already there, three folders deeper, named differently by someone who left two years ago.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- USE CASE -->
+  <section style="padding-top:0">
+    <div class="sec-label">The solution</div>
+    <h2>One query. Every system. Exact version.</h2>
+    <div class="uc-grid">
+      <div class="uc-scenario">
+        <div class="uc-hdr">Regulatory Affairs · FDA query scenario</div>
+        <div class="uc-event">
+          <strong>Monday, 9:02 AM</strong>
+          FDA information request received. Response required within 48 hours. Three systems involved.
+        </div>
+        <ul class="steps">
+          <li><span class="sn">01</span><span class="st">Regulatory asks BeesWall for <em>submitted protocol + deviation + SOP</em></span></li>
+          <li><span class="sn">02</span><span class="st">BeesWall navigates <em>Veeva, SharePoint, and on-prem</em> simultaneously</span></li>
+          <li><span class="sn">03</span><span class="st">Returns exact submitted version, cross-referenced change control, governing SOP — <em>with full traceability</em></span></li>
+          <li><span class="sn">04</span><span class="st">Response package ready in <em>minutes, not 2 days</em></span></li>
+        </ul>
+      </div>
+      <div class="uc-value">
+        <h3>Why this changes the economics</h3>
+        <div class="vi-list">
+          <div class="vi"><div class="vi-dot"></div><div class="vi-text"><strong>A delayed FDA response can hold a launch worth $50–500M.</strong> BeesWall eliminates the file-archaeology delay entirely.</div></div>
+          <div class="vi"><div class="vi-dot"></div><div class="vi-text"><strong>BeesWall is not a replacement for Veeva or SharePoint.</strong> It's the connective layer between them — zero migration, zero disruption.</div></div>
+          <div class="vi"><div class="vi-dot"></div><div class="vi-text"><strong>Your AI investments work harder.</strong> Copilot and Azure AI can now reason across the entire estate, not just SharePoint.</div></div>
+          <div class="vi"><div class="vi-dot"></div><div class="vi-text"><strong>Fits existing compliance budgets.</strong> BeesWall sits on a known technology line — not a new category spend.</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section style="padding-top:0">
+    <div class="sec-label">How it works</div>
+    <h2>Navigation layer, not a new system.</h2>
+    <p class="sec-sub">BeesWall is an overlay. It reads your existing storage, maps relationships between documents, and makes the entire estate queryable — without moving a single file.</p>
+    <div class="hiw-grid">
+      <div class="hiw-step"><div class="hiw-n">01</div><div class="hiw-title">Connect your estate</div><div class="hiw-body">SharePoint, Veeva, SAP, Google Drive, on-prem drives. BeesWall maps the full landscape — cloud and on-prem simultaneously.</div></div>
+      <div class="hiw-step"><div class="hiw-n">02</div><div class="hiw-title">Structure the chaos</div><div class="hiw-body">BeesWall builds a navigation layer over your existing folder hierarchies. No migration. No renaming. No reorganization required.</div></div>
+      <div class="hiw-step"><div class="hiw-n">03</div><div class="hiw-title">Query in plain language</div><div class="hiw-body">Your team asks for what they need. BeesWall finds the right file, right version, with cross-system context — in seconds.</div></div>
+      <div class="hiw-step"><div class="hiw-n">04</div><div class="hiw-title">AI sees everything</div><div class="hiw-body">Copilot, Azure AI Foundry, and your LLM layer now have visibility across the full estate. BeesWall is the substrate that makes AI actually work.</div></div>
+    </div>
+  </section>
+
+  <!-- INTEGRATIONS -->
+  <section style="padding-top:0">
+    <div class="sec-label">Integrations</div>
+    <h2>Wherever your files live.</h2>
+    <div class="int-grid">
+      <div class="int-pill"><span class="int-dot"></span>SharePoint</div>
+      <div class="int-pill"><span class="int-dot"></span>Microsoft Teams</div>
+      <div class="int-pill"><span class="int-dot"></span>OneDrive</div>
+      <div class="int-pill"><span class="int-dot"></span>Veeva Vault</div>
+      <div class="int-pill"><span class="int-dot"></span>SAP</div>
+      <div class="int-pill"><span class="int-dot"></span>Google Drive</div>
+      <div class="int-pill"><span class="int-dot"></span>Box</div>
+      <div class="int-pill"><span class="int-dot"></span>Dropbox</div>
+      <div class="int-pill"><span class="int-dot"></span>Network drives</div>
+      <div class="int-pill"><span class="int-dot"></span>On-prem servers</div>
+      <div class="int-pill"><span class="int-dot"></span>Azure AI Foundry</div>
+      <div class="int-pill"><span class="int-dot"></span>Microsoft Copilot</div>
+    </div>
+  </section>
+
+  <!-- PERSONAS -->
+  <section style="padding-top:0">
+    <div class="sec-label">Who it's for</div>
+    <h2>Two buyers. One shared problem.</h2>
+    <div class="per-grid">
+      <div class="per-card">
+        <div class="per-role">Economic buyer</div>
+        <div class="per-title">CDO / Head of AI Transformation</div>
+        <div class="per-pain">You've deployed Copilot. You've stood up Azure AI Foundry. But your AI initiatives keep hitting the same wall: the data estate is too fragmented to reason across. The ROI on AI is locked behind file system chaos.</div>
+        <div class="per-value">BeesWall is the substrate that makes your AI investments work. One integration connects the entire estate — Veeva, SharePoint, SAP, on-prem — and makes it navigable for every model you deploy.</div>
+      </div>
+      <div class="per-card">
+        <div class="per-role">Pain owner</div>
+        <div class="per-title">VP / Head of Regulatory Affairs</div>
+        <div class="per-pain">When an FDA or EMA query arrives, you have 48 hours. The right file exists — but it's in Veeva, the change control is in SharePoint, and the SOP is on the on-prem drive. The person who knew where everything was left 18 months ago.</div>
+        <div class="per-value">BeesWall finds the exact submitted version, the governing change control, and the SOP — across all three systems — in minutes. No manual coordination. Full traceability.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section style="padding-top:0">
+    <div class="sec-label">From customers</div>
+    <h2>What they actually say.</h2>
+    <div class="t-grid">
+      <div class="t-card">
+        <div class="t-quote">"I can finally find my files in seconds without opening endless folders."</div>
+        <div class="t-author">Paula B. · Medical Affairs, Top 100 Best Place to Work</div>
+      </div>
+      <div class="t-card">
+        <div class="t-quote">"Our customers now find the right information themselves. They can personalize their view without creating duplicates."</div>
+        <div class="t-author">John R. · Project Manager, Fortune 100</div>
+      </div>
+      <div class="t-card">
+        <div class="t-quote">"I've reduced onboarding time for new team members tremendously. Easy and intuitive from day one."</div>
+        <div class="t-author">Priscilla M. · Program Lead, S&amp;P Dow Jones 50</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- CTA BAND -->
+<div class="cta-band">
+  <div class="sec-label">Get started</div>
+  <h2>Your systems hold the answer.<br>BeesWall finds it.</h2>
+  <p>See how BeesWall connects your entire file estate in a 30-minute technical demo — no migration, no disruption, no new system to manage.</p>
+  <div class="cta-btns">
+    <a href="#" class="btn-primary">Request a demo</a>
+    <a href="#" class="btn-ghost">Download for Windows</a>
+  </div>
+</div>
+
+<footer>
+  <div class="f-logo">Bees<span>Wall</span> <span style="font-family:'DM Sans',sans-serif;font-weight:300;font-size:11px;color:var(--bw-gray-light);margin-left:6px;">® BeesWall AG · Rotkreuz, Zug, Switzerland</span></div>
+  <div class="f-links">
+    <a href="#">Privacy policy</a>
+    <a href="#">License agreement</a>
+    <a href="#">System requirements</a>
+    <a href="#">Contact</a>
+  </div>
+</footer>
+
+</body>
+</html>
